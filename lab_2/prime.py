@@ -31,10 +31,10 @@ def main():
 
         try:
             n = int(input("Введите n\n"))
-            print_primes(n)
             if n < 0:
                 print("Введите натуральное число\n")
                 continue
+            print_primes(n)
             break
 
         except ValueError:
