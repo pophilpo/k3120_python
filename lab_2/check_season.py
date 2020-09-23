@@ -14,11 +14,11 @@ def main():
             print("Введите целое число от 1 до 12")
             continue
 
-        if month_number == 12 or month_number == 1 or month_number == 2:
+        if month_number in (12, 1, 2):
             print("Зима")
-        elif month_number == 3 or month_number == 4 or month_number == 5:
+        elif month_number in (3, 4, 5):
             print("Весна")
-        elif month_number == 6 or month_number == 7 or month_number == 8:
+        elif month_number in (6, 7, 8):
             print("Лето")
         else:
             print("Осень")
@@ -27,7 +27,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-

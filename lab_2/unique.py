@@ -1,4 +1,3 @@
-
 def is_unique(string):
 
     seen = list()
@@ -16,7 +15,7 @@ def main():
     # Это вряд ли оптимальное решение, но в таких маленьких диапозонах работает быстро.
     # От самого маленького счастливого числа до самого большого.
 
-    for number in range(1023, 9876+1):
+    for number in range(1023, 9876 + 1):
         number = str(number)
 
         if is_unique(number):
@@ -25,4 +24,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-        

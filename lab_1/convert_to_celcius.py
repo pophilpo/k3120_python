@@ -1,6 +1,6 @@
 def convert_temperature(x):
 
-    return (x-32)/1.8
+    return (x - 32) / 1.8
 
 
 def main():
@@ -20,4 +20,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -11,8 +11,6 @@ def main():
     turtle.left(90)
     turtle.forward(20)
 
- 
+
 if __name__ == "__main__":
     main()
-
-

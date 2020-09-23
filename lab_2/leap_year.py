@@ -23,5 +23,6 @@ def main():
             print("Введите целое ПОЛОЖИТЕЛЬНОЕ число\n")
             continue
 
+
 if __name__ == "__main__":
     main()
