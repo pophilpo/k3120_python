@@ -14,12 +14,17 @@ def read_list():
 
 
 
-
 def main():
-    print(len(read_list()))
+
+    input_list = read_list()
+
+    mean_value = sum(input_list) / len(input_list)
+
+    print(f"Среднее значение списка {mean_value}")
 
 
 if __name__ == "__main__":
     main()
+
 
 
