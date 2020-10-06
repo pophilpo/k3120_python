@@ -1,5 +1,5 @@
-def main():
-
+def read_list():
+    
     user_input = list()
     print("Введите числа")
 
@@ -10,8 +10,13 @@ def main():
             break
 
         user_input.append(input_number)
+    return user_input
 
-    print(len(user_input))
+
+
+
+def main():
+    print(len(read_list()))
 
 
 if __name__ == "__main__":
