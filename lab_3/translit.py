@@ -4,7 +4,6 @@ def main():
     symbols = ("абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", "abvgdeejzijklmnoprstufhzcss_y`euaABVGDEEJZIJKLMNOPRSTUFHZCSS_Y`EUA")
 
     map_dict = dict()
-    map_dict[" "] = " "
 
     for russian_letter, eng_letter in zip(symbols[0], symbols[1]):
 
@@ -21,7 +20,12 @@ def main():
     result = list()
 
     for char in user_input:
-        result.append(map_dict[char])
+
+        translit_char = map_dict.get(char)
+        if translit_char:
+            result.append(translit_char)
+        else:
+            result.append(char)
 
     result = "".join(result)
     print(result)
