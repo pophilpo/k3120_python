@@ -1,3 +1,16 @@
+def caesar_breaker(ciphertext: str, dictionary) -> int:
+    """
+    >>> d = {"python", "java", "ruby"}
+    >>> caesar_breaker("python", d)
+    0
+    >>> caesar_breaker("sbwkrq", d)
+    3
+    """
+    best_shift = 0
+    # PUT YOUR CODE HERE
+    return best_shift
+
+
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     Encrypts plaintext using a Caesar cipher.
