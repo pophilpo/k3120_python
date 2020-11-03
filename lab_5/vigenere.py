@@ -8,13 +8,16 @@ def encrypt_char(char, key, operation=True):
 
     if char.islower():
         alphabet = lower_alphabet
+        key = key.lower()
     else:
         alphabet = upper_alphabet
+        key = key.upper()
 
     if char not in alphabet:
         return char
 
     char_index = alphabet.index(char)
+
     key_index = alphabet.index(key)
 
     # If char is not in alphabet e.g. (" ", "!!@#!@$%^")
