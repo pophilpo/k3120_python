@@ -82,6 +82,24 @@ public:
     }
     return result;
   }
+
+  template <typename T> T FindEmptyPosistions() {
+
+    for (size_t row_index = 0; row_index < storage.size(); row_index++) {
+
+      vector<int> row = storage[row_index];
+      for (size_t column_index = 0; column_index < row.size(); column_index++) {
+
+        int value = row[column_index];
+        if (value == 0) {
+          Position pos = {static_cast<int>(row_index),
+                          static_cast<int>(column_index)};
+          return pos;
+        }
+      }
+    }
+    return false;
+  }
 };
 
 int main() {
