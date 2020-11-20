@@ -114,8 +114,21 @@ public:
     taken.insert(taken.end(), block.begin(), block.end());
 
     sort(taken.begin(), taken.end());
-    unique(taken.begin(), taken.end());
-    return taken;
+
+    taken.erase(unique(taken.begin(), taken.end()), taken.end());
+
+    vector<int> result;
+    for (int i = 1; i < 10; i++){
+      if (find(taken.begin(), taken.end(), i) == taken.end()){
+        result.push_back(i);
+      }
+    }
+
+    return result;
+
+
+
+
 
 
 
