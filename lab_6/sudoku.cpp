@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sys/types.h>
 #include <type_traits>
+#include <algorithm>
 
 using namespace std;
 
@@ -66,7 +67,6 @@ public:
     int x_start = (position.row / 3) * 3;
     int y_start = (position.column / 3) * 3;
 
-    cout << x_start << " " << y_start << endl;
 
     vector<int> result;
 
@@ -100,6 +100,26 @@ public:
     }
     return false;
   }
+
+  vector<int> FindPossibeValues(Position position){
+
+    vector<int> taken;
+
+    vector<int> row = GetRow(position);
+    vector<int> column = GetColumn(position);
+    vector<int> block = GetBlock(position);
+
+    taken.insert(taken.end(), row.begin(), row.end());
+    taken.insert(taken.end(), column.begin(), column.end());
+    taken.insert(taken.end(), block.begin(), block.end());
+
+    sort(taken.begin(), taken.end());
+    unique(taken.begin(), taken.end());
+    return taken;
+
+
+
+  }
 };
 
 int main() {
@@ -110,7 +130,7 @@ int main() {
   grid.Group(9);
 
   Position position = {0, 0};
-  vector<int> row = grid.GetBlock(position);
+  vector<int> row = grid.FindPossibeValues(position);
   for (int value : row) {
     cout << value << " ";
   }
