@@ -2,6 +2,7 @@
 #include "vector"
 #include <fstream>
 #include <sys/types.h>
+#include <type_traits>
 
 using namespace std;
 
@@ -47,6 +48,40 @@ public:
   }
 
   vector<int> GetRow(Position position) { return storage[position.row]; }
+
+  vector<int> GetColumn(Position position) {
+
+    vector<int> result;
+
+    for (vector<int> row : storage) {
+
+      result.push_back(row[position.column]);
+    }
+
+    return result;
+  }
+
+  vector<int> GetBlock(Position position) {
+
+    int x_start = (position.row / 3) * 3;
+    int y_start = (position.column / 3) * 3;
+
+    cout << x_start << " " << y_start << endl;
+
+    vector<int> result;
+
+    for (int row_index = x_start; row_index < x_start + 3; row_index++) {
+
+      vector<int> row = storage[row_index];
+      vector<int> slice =
+          vector<int>(row.begin() + y_start, row.begin() + (y_start + 3));
+
+      for (int value : slice) {
+        result.push_back(value);
+      }
+    }
+    return result;
+  }
 };
 
 int main() {
@@ -56,10 +91,10 @@ int main() {
   grid.ReadFromFile(filename);
   grid.Group(9);
 
-  Position position = {4, 0};
-  vector<int> row = grid.GetRow(position);
-  for (int values : row) {
-    cout << values << " ";
+  Position position = {0, 0};
+  vector<int> row = grid.GetBlock(position);
+  for (int value : row) {
+    cout << value << " ";
   }
 
   return 0;
