@@ -12,6 +12,7 @@ struct Position {
   int column;
 };
 
+
 class Grid {
 
 private:
@@ -133,7 +134,38 @@ public:
 
 
   }
+
+  friend ostream& operator<<(ostream& os, const Grid& grid);
+
 };
+
+
+
+ostream &operator<<(ostream &os, Grid const &grid){
+
+  // Lord forgive me
+    for (size_t row_index=0; row_index < grid.storage.size(); row_index++) {
+
+    vector<int> row = grid.storage[row_index];
+    if (row_index==0 || row_index ==3 || row_index == 6) {
+      os << "_________" << endl;
+    }
+
+    os << "|" << row[0] << row[1] << row[2] << "|" << row[3] << row[4] << row[5] << "|" << row[7] << row[8] << row[9] << "|" << endl;
+
+
+  }
+
+  os << "_________" << endl;
+
+  return os;
+
+}
+
+
+
+
+
 
 int main() {
 
@@ -142,11 +174,7 @@ int main() {
   grid.ReadFromFile(filename);
   grid.Group(9);
 
-  Position position = {0, 0};
-  vector<int> row = grid.FindPossibeValues(position);
-  for (int value : row) {
-    cout << value << " ";
-  }
+  cout << grid;
 
   return 0;
 }
