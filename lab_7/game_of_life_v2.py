@@ -1,3 +1,5 @@
+import curses
+import abc
 import pygame
 from pygame.locals import *
 from pprint import pprint as pp
@@ -165,13 +167,37 @@ class GameOfLife:
                 file.write(string_row+"\n")
 
         print("Successfully exported current grid state.")
+
+
+
+
+class UI(abc.ABC):
+
+    def __init__(self, life: GameOfLife):
+        self.life = life
+    
+    @abc.abstractmethod
+
+    def run(self):
+        pass
+    
+
+class Console(UI):
+
+    def __init__(self, life):
+        super().__init__(life)
+    
+    def draw_borders(self, screen)
+
+
     
 
 
 def main():
 
     life = GameOfLife.from_file("gameoflife.txt")
-    pp(life.curr_grid)
+
+
 
 
 
