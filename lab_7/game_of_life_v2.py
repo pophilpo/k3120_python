@@ -127,23 +127,53 @@ class GameOfLife:
         """
         Прочитать состояние клеток из указанного файла.
         """
-        pass
+
+        with open(filename, "r") as file:
+            data = file.read()
+        
+
+        rows = data.split("\n")
+
+        grid = list()
+        for row in rows:
+            new_row = list()
+            for char in row:
+                new_row.append(int(char))
+            grid.append(new_row)
+
+
+        size = (len(rows), len(rows[0]))
+        life = GameOfLife(size, False)
+        life.curr_grid = grid
+
+        return life
+
+
 
     def save(self, filename):
         """
         Сохранить текущее состояние клеток в указанный файл.
         """
-        pass
+
+        with open(filename, "w") as file:
+
+
+
+            for row in self.curr_grid:
+                row = map(str, row)
+                string_row = "".join(row)
+                file.write(string_row+"\n")
+
+        print("Successfully exported current grid state.")
     
 
 
 def main():
 
-    life = GameOfLife((5, 10), max_generations=50)
+    life = GameOfLife.from_file("gameoflife.txt")
+    pp(life.curr_grid)
 
-    while life.is_changing and not life.is_max_generations_exceeded:
-        life.step()
-    print(life.generations)
+
 
 if __name__ == "__main__":
     main()
