@@ -294,6 +294,10 @@ class GUI(UI):
 
         while True:
             for event in pygame.event.get():
+
+                if event.type == QUIT:
+                    sys.exit(1)
+
                 if event.type == KEYDOWN:
                     return
 
@@ -323,19 +327,21 @@ class GUI(UI):
         pp(self.life.curr_grid)
 
         running = True
-        while self.life.is_changing and not self.life.is_max_generations_exceeded and running:
+        while not self.life.is_max_generations_exceeded:
 
             self.draw_grid()
             self.draw_lines()
             pygame.display.flip()
+
+            if not self.life.is_changing:
+                self.pause()
  
 
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    running = False
+                    sys.exit(1)
 
                 elif event.type == KEYDOWN:
-                    print("Pressed")
                     self.pause()
 
             clock.tick(5)
