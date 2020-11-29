@@ -12,15 +12,18 @@ import time
 
 class GameOfLife:
 
-    def __init__(self, size, randomize: bool=True, max_generations=None, speed=100) -> None:
+    def __init__(self, size, randomize: bool=True, max_generations=None, speed=100, cell_size=2) -> None:
         # Размер клеточного поля
         self.rows, self.cols = size
+        self.cell_size = cell_size
         # Предыдущее поколение клеток
         self.prev_grid = self.create_grid()
         # Текущее поколение клеток
         self.curr_grid = self.create_grid(randomize)
         # Максимальное число поколений
         self.max_generations = max_generations
+
+        self.screen_size = (self.rows*cell_size, self.cols*cell_size)
 
 
         # Текущее число поколений
@@ -238,12 +241,113 @@ class Console(UI):
 
         curses.endwin()
 
+
+class GUI(UI):
+
+    def __init__(self, life):
+        super().__init__(life)
+        self.screen = pygame.display.set_mode(self.life.screen_size)
+
+
+    def draw_lines(self):
+
+        for x in range(0, self.life.rows):
+            x = x * self.life.cell_size
+            pygame.draw.line(
+                    self.screen, pygame.Color("black"),
+                    (x, 0), 
+                    (x, self.life.screen_size[1])
+                    )
+        for y in range(0, self.life.cols):
+            y = y * self.life.cell_size
+            pygame.draw.line(
+                    self.screen,
+                    pygame.Color("black"),
+                    (0, y),
+                    (self.life.screen_size[0], y)
+
+                    )
+
+    def draw_grid(self):
+
+        for x, row in enumerate(self.life.curr_grid):
+            for y, value in enumerate(row):
+
+                coord_x = x * self.life.cell_size
+                coord_y = y * self.life.cell_size
+
+                if value == 1:
+                    color = pygame.Color("green")
+                else:
+                    color = pygame.Color("white")
+
+                #print(f"Drawing {color} at {coord_x} - {coord_y} | Value {value}")
+
+                pygame.draw.rect(
+                        self.screen,
+                        color,
+                        (coord_y, coord_x, self.life.cell_size, self.life.cell_size)
+                        )
+
+
+    def pause(self):
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    return
+
+                if event.type == MOUSEBUTTONUP:
+
+                    x, y = pygame.mouse.get_pos() 
+
+                    x = x // self.life.cell_size
+                    y = y // self.life.cell_size
+
+                    value = self.life.curr_grid[y][x]
+                    if value==1:
+                        self.life.curr_grid[y][x] = 0
+                    else:
+                        self.life.curr_grid[y][x] = 1
+                    self.draw_grid()
+                    self.draw_lines()
+                    pygame.display.flip()
+
+
+    def run(self):
+        print(self.life.screen_size)
+        pygame.init()
+        clock = pygame.time.Clock()
+        pygame.display.set_caption("Game of Life")
+        self.screen.fill(pygame.Color("white"))
+        pp(self.life.curr_grid)
+
+        running = True
+        while self.life.is_changing and not self.life.is_max_generations_exceeded and running:
+
+            self.draw_grid()
+            self.draw_lines()
+            pygame.display.flip()
+ 
+
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    running = False
+
+                elif event.type == KEYDOWN:
+                    print("Pressed")
+                    self.pause()
+
+            clock.tick(5)
+            self.life.step()
+
+
 def main():
 
-    life = GameOfLife((50, 50), True, 100, 10)
-    ui = Console(life)
+    life = GameOfLife((10, 10), True, 100, cell_size=20)
+    pp(life.curr_grid)
+    ui = GUI(life)
     ui.run()
-
 
 if __name__ == "__main__":
     main()
