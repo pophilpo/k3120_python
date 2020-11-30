@@ -219,6 +219,7 @@ class Console(UI):
             self.draw_grid(screen)
             curses.napms(self.life.speed)
 
+        screen.getkey()
         curses.endwin()
 
 
