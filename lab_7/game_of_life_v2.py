@@ -6,13 +6,13 @@ from pprint import pprint as pp
 import random
 import sys
 import copy
+import argparse
 
-import time
 
 
 class GameOfLife:
 
-    def __init__(self, size, randomize: bool=True, max_generations=None, speed=100, cell_size=2) -> None:
+    def __init__(self, size=(5, 5), randomize: bool=True, max_generations=None, speed=100, cell_size=50) -> None:
         # Размер клеточного поля
         self.rows, self.cols = size
         self.cell_size = cell_size
@@ -132,27 +132,30 @@ class GameOfLife:
         return self.prev_grid != self.curr_grid
 
     @staticmethod
-    def from_file(filename): 
+    def from_file(filename, max_generations): 
         """
         Прочитать состояние клеток из указанного файла.
         """
 
-        with open(filename, "r") as file:
-            data = file.read()
-        
 
-        rows = data.split("\n")
-
+        # This is so bad. I think it's due to my IDE adding newlines.
         grid = list()
-        for row in rows:
-            new_row = list()
-            for char in row:
-                new_row.append(int(char))
-            grid.append(new_row)
+        with open(filename, "r") as file:
 
 
-        size = (len(rows), len(rows[0]))
-        life = GameOfLife(size, False)
+            for row in file.readlines():
+                row = row.replace("\n", "")
+                if not row.isdigit():
+                    continue
+                new_row = list()
+                for char in row:
+                    new_row.append(int(char))
+                grid.append(new_row)
+        print(grid)
+
+
+        size = (len(grid), len(grid[0]))
+        life = GameOfLife(size, False, max_generations = max_generations)
         life.curr_grid = grid
 
         return life
@@ -221,10 +224,6 @@ class Console(UI):
                     screen.addch(pos_y, pos_x, ".")
 
         screen.refresh()
-
-
-
-
 
 
     def run(self):
@@ -319,12 +318,10 @@ class GUI(UI):
 
 
     def run(self):
-        print(self.life.screen_size)
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption("Game of Life")
         self.screen.fill(pygame.Color("white"))
-        pp(self.life.curr_grid)
 
         running = True
         while not self.life.is_max_generations_exceeded:
@@ -350,9 +347,26 @@ class GUI(UI):
 
 def main():
 
-    life = GameOfLife((10, 10), True, 100, cell_size=20)
-    pp(life.curr_grid)
-    ui = GUI(life)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-g", "--gui", help="Initialize GUI version of the game.")
+    parser.add_argument("--file", help="Path to file. Read the grid from file. Size arguments will be ignored.")
+    parser.add_argument("--size", help="Input grid size in format: X-Y or just X if it's a rectangle. Default 50-50", default="8-8")
+    parser.add_argument("--max", help="Input the number of maximum generations. Default 100", type=int, default=100)
+    parser.add_argument("--cell_size", help="Input cell size. Only for GUI version. Default 50", type=int, default=50)
+
+    args = parser.parse_args()
+
+    if args.file:
+        life = GameOfLife.from_file(args.file, args.max)
+    else:
+        grid_size = (int(args.size.split("-")[0]), int(args.size.split("-")[1]))
+        life = GameOfLife(size=grid_size, randomize=True, max_generations=args.max, cell_size=args.cell_size)
+
+    if args.gui:
+        ui = GUI(life)
+    else:
+        ui = Console(life)
+
     ui.run()
 
 if __name__ == "__main__":
