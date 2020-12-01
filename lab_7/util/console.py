@@ -2,6 +2,7 @@ import curses
 
 from util.ui import UI
 
+
 class Console(UI):
     def __init__(self, life):
         super().__init__(life)
@@ -48,5 +49,3 @@ class Console(UI):
 
         screen.getkey()
         curses.endwin()
-
-

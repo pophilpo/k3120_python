@@ -102,5 +102,3 @@ class GUI(UI):
 
             clock.tick(5)
             self.life.step()
-
-

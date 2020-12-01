@@ -2,6 +2,16 @@ import copy
 import random
 import pygame
 
+# TODO: Fix non rect grid sizes
+# TODO: Fix generation logic
+
+
+class Cell:
+    def __init__(self, row, column):
+        self.row = row
+        self.column = column
+
+
 class GameOfLife:
     def __init__(
         self,
@@ -30,6 +40,12 @@ class GameOfLife:
 
         self.speed = speed
 
+    def change_state(self, cell):
+
+        self.curr_grid[cell.row][cell.column] = (
+            1 if self.curr_grid[cell.row][cell.column] == 0 else 0
+        )
+
     def create_grid(self, randomize: bool = False):
         grid = list()
 
@@ -45,7 +61,7 @@ class GameOfLife:
 
         result = list()
 
-        x, y = cell[0], cell[1]
+        x, y = cell.column, cell.row
 
         Y = self.rows
         X = self.cols
@@ -69,30 +85,35 @@ class GameOfLife:
 
         self.prev_grid = copy.deepcopy(self.curr_grid)
 
+        to_change = list()
+
         for row_number, row in enumerate(self.curr_grid):
 
             for column_number, value in enumerate(row):
 
-                cell = (row_number, column_number)
+                cell = Cell(row_number, column_number)
 
                 neighbours = self.get_neighbours(cell)
                 alive_counter = len(
                     [
-                        self.curr_grid[n_cell[0]][n_cell[1]]
+                        self.curr_grid[n_cell[1]][n_cell[0]]
                         for n_cell in neighbours
-                        if self.curr_grid[n_cell[0]][n_cell[1]] == 1
+                        if self.curr_grid[n_cell[1]][n_cell[0]] == 1
                     ]
                 )
+
                 if value == 1:
                     if alive_counter == 2 or alive_counter == 3:
                         continue
                     else:
-                        self.curr_grid[row_number][column_number] = 0
+                        to_change.append(cell)
                 else:
                     if alive_counter == 3:
-                        self.curr_grid[row_number][column_number] = 1
+                        to_change.append(cell)
                     else:
                         continue
+        for cell in to_change:
+            self.change_state(cell)
 
     def step(self) -> None:
         """
@@ -157,5 +178,3 @@ class GameOfLife:
                 file.write(string_row + "\n")
 
         print("Successfully exported current grid state.")
-
-
