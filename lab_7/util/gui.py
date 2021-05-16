@@ -47,7 +47,7 @@ class GUI(UI):
                 pygame.draw.rect(
                     self.screen,
                     color,
-                    (coord_y, coord_x, self.life.cell_size, self.life.cell_size),
+                    (coord_x, coord_y, self.life.cell_size, self.life.cell_size),
                 )
 
     def pause(self):
@@ -68,11 +68,11 @@ class GUI(UI):
                     x = x // self.life.cell_size
                     y = y // self.life.cell_size
 
-                    value = self.life.curr_grid[y][x]
+                    value = self.life.curr_grid[x][y]
                     if value == 1:
-                        self.life.curr_grid[y][x] = 0
+                        self.life.curr_grid[x][y] = 0
                     else:
-                        self.life.curr_grid[y][x] = 1
+                        self.life.curr_grid[x][y] = 1
                     self.draw_grid()
                     self.draw_lines()
                     pygame.display.flip()

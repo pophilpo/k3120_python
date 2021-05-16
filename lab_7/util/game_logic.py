@@ -61,10 +61,10 @@ class GameOfLife:
 
         result = list()
 
-        x, y = cell.column, cell.row
+        x, y = cell.row, cell.column
 
-        Y = self.rows
-        X = self.cols
+        X = self.rows
+        Y = self.cols
 
         result = [
             (x2, y2)
@@ -96,9 +96,9 @@ class GameOfLife:
                 neighbours = self.get_neighbours(cell)
                 alive_counter = len(
                     [
-                        self.curr_grid[n_cell[1]][n_cell[0]]
+                        self.curr_grid[n_cell[0]][n_cell[1]]
                         for n_cell in neighbours
-                        if self.curr_grid[n_cell[1]][n_cell[0]] == 1
+                        if self.curr_grid[n_cell[0]][n_cell[1]] == 1
                     ]
                 )
 

@@ -17,6 +17,7 @@ class Console(UI):
         width = self.life.cols + 3
 
         grid = screen.subwin(height, width, begin_x, begin_y)
+
         grid.box()
         screen.getch()
 
@@ -30,9 +31,9 @@ class Console(UI):
                 pos_y = y + 1
 
                 if value == 1:
-                    screen.addch(pos_y, pos_x, "O")
+                    screen.addch(pos_x, pos_y, "O")
                 else:
-                    screen.addch(pos_y, pos_x, ".")
+                    screen.addch(pos_x, pos_y, ".")
 
         screen.refresh()
 
