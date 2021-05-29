@@ -31,8 +31,8 @@ def update_news():
 
     s = session()
 
-    number_of_pages = 10
-    url = "https://news.ycombinator.com/newest?next=27321578&n=61"
+    number_of_pages = 5
+    url = "https://news.ycombinator.com/newest"
     news = get_news(url, number_of_pages)
 
     for article in news:
@@ -48,10 +48,51 @@ def update_news():
     redirect("/news")
 
 
-@route("/classify")
-def classify_news():
-    # PUT YOUR CODE HERE
-    pass
+@route('/recommendations')
+def recommendations():
+
+    s = session()
+
+    classified_news = list()
+
+    unmarked_rows = s.query(News).filter(News.label == None).all()
+    marked_rows = s.query(News).filter(News.label != None).all()
+
+    X = list()
+    y = list()
+
+    for row in marked_rows:
+        title = row.title
+        label = row.label
+        X.append(title)
+        y.append(label)
+
+    model = NaiveBayesClassifier()
+    model.fit(X, y)
+
+    for row in unmarked_rows:
+
+        title = row.title
+        score = model.predict(title)
+
+        if score == "good":
+            score = 0
+        elif score == "maybe":
+            score = 1
+        elif score == "never":
+            score = 2
+        classified_news.append([score, row])
+
+    print("Before sort")
+    print(classified_news[:10])
+    classified_news.sort(key=lambda x: x[0])
+    print("After sort")
+    print(classified_news[:10])
+    classified_news = [result[1] for result in classified_news]
+    # 1. Получить список неразмеченных новостей из БД
+    # 2. Получить прогнозы для каждой новости
+    # 3. Вывести ранжированную таблицу с новостями
+    return template('news_template', rows=classified_news)
 
 
 if __name__ == "__main__":

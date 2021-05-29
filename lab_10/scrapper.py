@@ -1,4 +1,5 @@
 import requests
+import time
 from bs4 import BeautifulSoup as bs
 
 
@@ -6,7 +7,7 @@ def get_respone(url):
 
     response = requests.get(url)
     if response.status_code != 200:
-        print(f"Bad response. Status code [response.status_code]")
+        print(f"Bad response. Status code [{response.status_code}]")
         return None
     return response
 
@@ -41,7 +42,8 @@ def extract_news(html):
             'comments': comments,
             'points': score,
             'title': article_title,
-            'url': article_url
+            'url': article_url,
+            'article_id': article_id
         }
         news_list.append(article)
 
@@ -55,8 +57,6 @@ def extract_next_page(html):
 
     return "https://news.ycombinator.com/" + next_url.get("href")
 
-    # PUT YOUR CODE HERE
-
 
 def get_news(url, n_pages=1):
     """ Collect news from a given web page """
@@ -64,19 +64,11 @@ def get_news(url, n_pages=1):
     while n_pages:
         print("Collecting data from page: {}".format(url))
         response = get_respone(url)
+        if not response:
+            continue
         html = bs(response.content, "html.parser")
         news_list = extract_news(html)
         url = extract_next_page(html)
         news.extend(news_list)
         n_pages -= 1
     return news
-
-
-def main():
-
-    url = "https://news.ycombinator.com/newest?next=27321578&n=61"
-    print(get_news(url, n_pages=3))
-
-
-if __name__ == "__main__":
-    main()
